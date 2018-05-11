@@ -88,28 +88,39 @@ public class Fuzzy {
             for (int j = 0; j < degreeBerat.length; j++) {
                 if (degreeTinggi[i] < degreeBerat[j]){
                     fValue[x]   = degreeTinggi[i];
-                    fStatus[x]  = degreeStatusTinggi[i];
                 } else {
-                    fValue[x]   = degreeBerat[j];
-                    fStatus[x]  = degreeStatusBerat[j];
+                    fValue[x]   = degreeBerat[j ];
                 }
+                fStatus[x]  = SehatRules.rules
+                        [this.getIndexArrayOfString(this.tinggi.getStatus(), degreeStatusTinggi[i])]
+                        [this.getIndexArrayOfString(this.berat.getStatus(), degreeStatusBerat[j])];
                 x++;
             }
         }
     }
 
     private void findMaxMethod() {
+        System.out.println();
         for (int i = 0; i < fValue.length; i++) {
             if (fValue[i] > maxValue) {
                 maxValue    = fValue[i];
                 maxStatus   = fStatus[i];
             }
+            System.out.println(fStatus[i] + ":" + fValue[i]);
         }
     }
 
     private void showFuzzyValue() {
+        System.out.println("\nResult =>");
         System.out.println("Status : " + maxStatus);
         System.out.println("Value  : " + maxValue);
+    }
+
+    public int getIndexArrayOfString(String[] strings, String item) {
+        for (int i = 0; i < strings.length; i++) {
+            if (item.equals(strings[i])) return i;
+        }
+        return -1;
     }
 
 }
