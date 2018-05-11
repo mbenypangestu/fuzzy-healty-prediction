@@ -4,6 +4,8 @@ import data.Berat;
 import data.Tinggi;
 import rules.SehatRules;
 
+import java.util.HashMap;
+
 public class Fuzzy {
     private double degreeTinggi[]       = new double[2];
     private double degreeBerat[]        = new double[2];
@@ -15,6 +17,9 @@ public class Fuzzy {
 
     private double maxValue             = 0;
     private String maxStatus            = null;
+
+    private HashMap<String, Double> sugenoSet   = new HashMap<String, Double>();
+    private double cripsIndex = 0;
 
     Berat   berat   = null;
     Tinggi  tinggi  = null;
@@ -28,11 +33,20 @@ public class Fuzzy {
         if (this.tinggi.isExactValue() && this.berat.isExactValue()) {
             this.findExactEvaluation();
         } else {
+            this.setSugenoValue();
             this.findDOM();
             this.deFuzzyficate();
             this.findMaxMethod();
+            this.findSugenoMethod();
             this.showFuzzyValue();
         }
+    }
+
+    private void setSugenoValue() {
+        sugenoSet.put("Tidak Sehat", 0.2);
+        sugenoSet.put("Agak Sehat", 0.4);
+        sugenoSet.put("Sehat", 0.6);
+        sugenoSet.put("Sangat Sehat", 0.8);
     }
 
     private void findExactEvaluation() {
@@ -108,6 +122,17 @@ public class Fuzzy {
             }
             System.out.println(fStatus[i] + ":" + fValue[i]);
         }
+    }
+
+    public void findSugenoMethod() {
+        double f = 0;
+        for (int i = 0; i < fValue.length; i++) {
+            cripsIndex += fValue[i] * sugenoSet.get(fStatus[i]);
+            System.out.println("item : " + fValue[i] + "| " + sugenoSet.get(fStatus[i]));
+            f += fValue[i];
+        }
+        cripsIndex /= f;
+        System.out.println("\nCrisp Index : " + cripsIndex);
     }
 
     private void showFuzzyValue() {
